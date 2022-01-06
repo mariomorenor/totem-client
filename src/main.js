@@ -5,6 +5,11 @@ import store from "./store";
 
 import VueSocketIO from "vue-socket.io";
 
+import VuePeerJS from 'vue-peerjs';
+import Peer from 'peerjs';
+
+Vue.use(VuePeerJS, new Peer({}));
+
 Vue.config.productionTip = false;
 
 const Store = require("electron-store");

@@ -1,6 +1,9 @@
 <template>
   <div class="px-5 py-5 app">
     <h1 class="mb-3">Configuración del Tótem</h1>
+    <b-field label="Nombre del Tótem" label-position="on-border">
+      <b-input v-model="nombre" placeholder="Ingrese un nombre para el tótem"></b-input>
+    </b-field>
     <b-field label="IP del Servidor" label-position="on-border">
       <b-input
         v-model="ip"
@@ -36,7 +39,7 @@
     </b-field>
     <b-field label="Micrófono" label-position="on-border">
       <b-select
-      @change.native="previewSound({microphone_selected})"
+        @change.native="previewSound({ microphone_selected })"
         v-model="microphone_selected"
         icon="microphone-alt"
         placeholder="Seleccione un microfóno"
@@ -82,6 +85,7 @@ export default {
       microphones: [],
       webcam_selected: "",
       microphone_selected: "",
+      nombre:"Tótem Grupo Scanner"
     };
   },
   mounted() {
@@ -93,6 +97,7 @@ export default {
       this.port = storage.get("socket_port");
       this.webcam_selected = storage.get("webcam_id");
       this.microphone_selected = storage.get("microphone_id");
+      this.nombre = storage.get("nombre");
 
       // get Devices
       this.webcams = [];
@@ -102,8 +107,8 @@ export default {
         video_id: this.webcam_selected,
       });
       this.previewSound({
-        audio_id:this.microphone_selected
-      })
+        audio_id: this.microphone_selected,
+      });
       navigator.mediaDevices.enumerateDevices().then(function (devices) {
         for (var i = 0; i < devices.length; i++) {
           var device = devices[i];
@@ -134,11 +139,13 @@ export default {
         });
     },
     previewSound({ audio_id }) {
-      navigator.mediaDevices.getUserMedia({ audio: { deviceId: audio_id } }).then(stream=>{
-        let audio = document.getElementById("sound_preview");
-        audio.srcObject = stream;
-        audio.play();
-      });
+      navigator.mediaDevices
+        .getUserMedia({ audio: { deviceId: audio_id } })
+        .then((stream) => {
+          let audio = document.getElementById("sound_preview");
+          audio.srcObject = stream;
+          audio.play();
+        });
     },
     saveConfig() {
       dialog
@@ -155,6 +162,7 @@ export default {
             storage.set("socket_port", `${this.port}`);
             storage.set("webcam_id", this.webcam_selected);
             storage.set("microphone_id", this.microphone_selected);
+            storage.set("nombre", this.nombre);
             ipcRenderer.send("reload-main-window");
             window.close();
           }
@@ -166,12 +174,11 @@ export default {
 
 
 <style lang="scss" >
-
 body::-webkit-scrollbar {
   display: none;
 }
 
-body{
+body {
   user-select: none;
 }
 </style>

@@ -1,11 +1,116 @@
 <template>
   <div class="home">
-    posi
+    <video
+      id="video-promocion"
+      autoplay
+      muted
+      loop
+      :src="'file://' + videos[0]"
+    ></video>
+    <video id="streaming"></video>
   </div>
 </template>
 
 <script>
+const { app } = require("@electron/remote");
+const fs = require("fs");
+const path = require("path");
+const Store = require("electron-store");
+const storage = new Store();
 export default {
-  name: 'Home',
-}
+  name: "Home",
+  data() {
+    return {
+      videos: [],
+      estado: "promocion",
+      nombre: "",
+      webcam: "",
+      microphone: "",
+      peer_id: "",
+      callInProgress:false
+    };
+  },
+  sockets: {
+    connect() {},
+  },
+  beforeMount() {
+    this.init();
+  },
+  mounted() {
+    this.getDiscovered();
+  },
+  methods: {
+    init() {
+      this.nombre = storage.get("nombre");
+      this.webcam = storage.get("webcam_id");
+      this.microphone = storage.get("microphone_id");
+      this.getVideos();
+      this.ready();
+    },
+    getVideos() {
+      let videosPath = app.getPath("videos");
+      this.videos = fs
+        .readdirSync(videosPath)
+        .filter((v) => path.extname(v) == ".mp4")
+        .map((v) => path.join(videosPath, v));
+    },
+    getDiscovered() {
+      setTimeout(() => {
+        this.peer_id = this.$peer.id;
+        this.$socket.emit("nuevo-totem", {
+          nombre: this.nombre,
+          estado: this.estado,
+          socket_id: this.$socket.id,
+          peer_id: this.$peer.id,
+        });
+      }, 500);
+    },
+    ready() {
+      let self = this;
+      this.$peer.on("call", (call) => {
+        navigator.mediaDevices
+          .getUserMedia({
+            video: {
+              deviceId: self.webcam,
+            },
+            audio: {
+              deviceId: self.microphone,
+            },
+          })
+          .then((stream) => {
+            call.answer(stream);
+            call.on("stream", (remoteStream) => {
+              let remoteVideo = document.getElementById("streaming");
+              remoteVideo.srcObject = remoteStream;
+              remoteVideo.play();
+              self.callInProgress = true;
+            });
+          });
+      });
+    },
+  },
+};
 </script>
+
+<style lang="scss">
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+}
+
+#video-promocion {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  object-fit: fill;
+}
+
+#streaming {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  object-fit: fill;
+  z-index: 1000;
+}
+</style>

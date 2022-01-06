@@ -13,6 +13,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@electron/remote": "^2.0.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^2.0.6",
@@ -20,7 +21,9 @@
     "core-js": "^3.6.5",
     "electron-store": "^8.0.1",
     "mousetrap": "^1.6.5",
+    "peerjs": "^1.3.2",
     "vue": "^2.6.11",
+    "vue-peerjs": "^0.3.0",
     "vue-router": "^3.2.0",
     "vue-socket.io": "^3.0.10",
     "vuex": "^3.4.0"
