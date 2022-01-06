@@ -37,9 +37,9 @@ export default {
       this.call.close();
       this.callInProgress = false;
     },
-    reconnect(){
+    reconnect() {
       this.getDiscovered();
-    }
+    },
   },
   beforeMount() {
     this.init();
@@ -55,13 +55,19 @@ export default {
       this.getVideos();
       this.ready();
 
-
-      Mousetrap.bind("enter",()=>{
-        this.$socket.emit("callServer",{
-          nombre:this.nombre,
-          socekt_id:this.$socket.id
-        })
-      })
+      Mousetrap.bind(
+        "enter",
+        () => {
+          if (!this.callInProgress) {
+            
+            this.$socket.emit("callServer", {
+              nombre: this.nombre,
+              socket_id: this.$socket.id,
+            });
+          }
+        },
+        "keyup"
+      );
     },
     getVideos() {
       let videosPath = app.getPath("videos");
@@ -78,8 +84,9 @@ export default {
           estado: this.estado,
           socket_id: this.$socket.id,
           peer_id: this.$peer.id,
-          videos:this.videos,
-          callInProgress:this.callInProgress
+          videos: this.videos,
+          callInProgress: this.callInProgress,
+          lost_call: false,
         });
       }, 1000);
     },
