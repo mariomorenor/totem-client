@@ -17,6 +17,7 @@ const fs = require("fs");
 const path = require("path");
 const Store = require("electron-store");
 const storage = new Store();
+const Mousetrap = require("mousetrap");
 export default {
   name: "Home",
   data() {
@@ -53,6 +54,14 @@ export default {
       this.microphone = storage.get("microphone_id");
       this.getVideos();
       this.ready();
+
+
+      Mousetrap.bind("enter",()=>{
+        this.$socket.emit("callServer",{
+          nombre:this.nombre,
+          socekt_id:this.$socket.id
+        })
+      })
     },
     getVideos() {
       let videosPath = app.getPath("videos");

@@ -7,15 +7,17 @@
 <script>
 const Mousetrap = require("mousetrap");
 const { ipcRenderer } = require("electron");
+
 export default {
   mounted() {
     this.init();
   },
   methods: {
     init() {
-      Mousetrap.bind("ctrl+c", () => {
+      Mousetrap.bind("alt+c", () => {
         ipcRenderer.send("show-config-window");
       });
+
     },
   },
 };
