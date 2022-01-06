@@ -69,7 +69,8 @@ export default {
           estado: this.estado,
           socket_id: this.$socket.id,
           peer_id: this.$peer.id,
-          videos:this.videos
+          videos:this.videos,
+          callInProgress:this.callInProgress
         });
       }, 1000);
     },
