@@ -7,7 +7,7 @@
       loop
       :src="'file://' + videos[0]"
     ></video>
-    <video id="streaming"></video>
+    <video v-show="callInProgress" id="streaming"></video>
   </div>
 </template>
 
@@ -27,11 +27,18 @@ export default {
       webcam: "",
       microphone: "",
       peer_id: "",
-      callInProgress:false
+      callInProgress: false,
+      call: "",
     };
   },
   sockets: {
-    connect() {},
+    stop_streaming() {
+      this.call.close();
+      this.callInProgress = false;
+    },
+    reconnect(){
+      this.getDiscovered();
+    }
   },
   beforeMount() {
     this.init();
@@ -62,8 +69,9 @@ export default {
           estado: this.estado,
           socket_id: this.$socket.id,
           peer_id: this.$peer.id,
+          videos:this.videos
         });
-      }, 500);
+      }, 1000);
     },
     ready() {
       let self = this;
@@ -79,7 +87,7 @@ export default {
           })
           .then((stream) => {
             call.answer(stream);
-            call.on("stream", (remoteStream) => {
+            self.call = call.on("stream", (remoteStream) => {
               let remoteVideo = document.getElementById("streaming");
               remoteVideo.srcObject = remoteStream;
               remoteVideo.play();
