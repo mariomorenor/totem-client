@@ -23,14 +23,18 @@ function createWindow({
   title,
   parent,
   modal,
+  frame=true,
+  resizable=true
 }) {
   // Create the browser window.
   let win = new BrowserWindow({
     width,
     title,
+    resizable,
     height,
     parent,
     modal,
+    frame,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -84,7 +88,7 @@ app.on("ready", async () => {
       console.error("Vue Devtools failed to install:", e.toString());
     }
   }
-  mainWindow = createWindow("", "index.html");
+  mainWindow = createWindow({devPath:"",prodPath:"index.html",width:900,height:600,modal:false,parent:null});
 });
 
 // Exit cleanly on request from parent process in development mode.
@@ -107,10 +111,12 @@ ipcMain.on("show-config-window", () => {
     devPath: "config",
     prodPath: "config.html",
     width: 400,
-    height: 200,
+    height: 650,
     parent: mainWindow,
     modal: true,
     title: "Configuración",
+    frame:false,
+    resizable:false
   });
 
 });
