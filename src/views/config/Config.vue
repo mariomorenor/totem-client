@@ -2,7 +2,10 @@
   <div class="px-5 py-5 app">
     <h1 class="mb-3">Configuración del Tótem</h1>
     <b-field label="Nombre del Tótem" label-position="on-border">
-      <b-input v-model="nombre" placeholder="Ingrese un nombre para el tótem"></b-input>
+      <b-input
+        v-model="nombre"
+        placeholder="Ingrese un nombre para el tótem"
+      ></b-input>
     </b-field>
     <b-field label="IP del Servidor" label-position="on-border">
       <b-input
@@ -15,7 +18,7 @@
     </b-field>
     <b-field label="Webcam" label-position="on-border">
       <b-select
-        @change.native="previewWebcam({ webcam_selected })"
+        @change.native="previewWebcam()"
         v-model="webcam_selected"
         icon="video"
         placeholder="Seleccione una webcam"
@@ -39,7 +42,6 @@
     </b-field>
     <b-field label="Micrófono" label-position="on-border">
       <b-select
-        @change.native="previewSound({ microphone_selected })"
         v-model="microphone_selected"
         icon="microphone-alt"
         placeholder="Seleccione un microfóno"
@@ -61,6 +63,21 @@
         </template>
       </b-select>
     </b-field>
+    <b-button
+      type="is-primary"
+      v-if="!mic_status"
+      @click="previewSound(), (mic_status = true)"
+      size="is-small"
+      icon-left="volume-up"
+    ></b-button>
+    <b-button
+      type="is-warning"
+      @click="stop_preview_audio()"
+      v-else
+      size="is-small"
+      icon-left="volume-mute"
+    ></b-button>
+
     <video id="webcam_preview"></video>
     <audio id="sound_preview"></audio>
     <b-button @click="saveConfig()" icon-left="user" type="is-success mr-3"
@@ -85,7 +102,8 @@ export default {
       microphones: [],
       webcam_selected: "",
       microphone_selected: "",
-      nombre:"Tótem Grupo Scanner"
+      nombre: "Tótem Grupo Scanner",
+      mic_status: false,
     };
   },
   mounted() {
@@ -99,16 +117,13 @@ export default {
       this.microphone_selected = storage.get("microphone_id");
       this.nombre = storage.get("nombre");
 
+      this.previewWebcam();
+
       // get Devices
       this.webcams = [];
       this.microphones = [];
       let self = this;
-      this.previewWebcam({
-        video_id: this.webcam_selected,
-      });
-      this.previewSound({
-        audio_id: this.microphone_selected,
-      });
+
       navigator.mediaDevices.enumerateDevices().then(function (devices) {
         for (var i = 0; i < devices.length; i++) {
           var device = devices[i];
@@ -124,11 +139,11 @@ export default {
     closeWindow() {
       window.close();
     },
-    previewWebcam({ video_id }) {
+    previewWebcam() {
       navigator.mediaDevices
         .getUserMedia({
           video: {
-            deviceId: video_id,
+            deviceId: this.webcam_selected,
             audio: false,
           },
         })
@@ -138,14 +153,19 @@ export default {
           video.play();
         });
     },
-    previewSound({ audio_id }) {
+    previewSound() {
       navigator.mediaDevices
-        .getUserMedia({ audio: { deviceId: audio_id } })
+        .getUserMedia({ audio: { deviceId: this.microphone_selected } })
         .then((stream) => {
           let audio = document.getElementById("sound_preview");
           audio.srcObject = stream;
           audio.play();
         });
+    },
+    stop_preview_audio() {
+      this.mic_status = false;
+      let audio = document.getElementById("sound_preview");
+      audio.pause();
     },
     saveConfig() {
       dialog
@@ -158,8 +178,8 @@ export default {
         })
         .then(({ response }) => {
           if (response == 0) {
-            storage.set("socket_ip", `${this.ip}`);
-            storage.set("socket_port", `${this.port}`);
+            storage.set("socket_ip", this.ip);
+            storage.set("socket_port", this.port);
             storage.set("webcam_id", this.webcam_selected);
             storage.set("microphone_id", this.microphone_selected);
             storage.set("nombre", this.nombre);
@@ -172,12 +192,10 @@ export default {
 };
 </script>
 
-
-<style lang="scss" >
+<style lang="scss">
 body::-webkit-scrollbar {
   display: none;
 }
-
 body {
   user-select: none;
 }

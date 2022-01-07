@@ -40,6 +40,9 @@ export default {
     reconnect() {
       this.getDiscovered();
     },
+    reloadTotem(){
+      window.location.reload();
+    }
   },
   beforeMount() {
     this.init();
