@@ -11,6 +11,8 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
+  "author": {"name": "Jonathan Moreno","email": "jmoreno@gruposcanner.com"},
+  "description": "Totem Cliente",
   "main": "background.js",
   "dependencies": {
     "@electron/remote": "^2.0.1",
