@@ -18,6 +18,9 @@ const path = require("path");
 const Store = require("electron-store");
 const storage = new Store();
 const Mousetrap = require("mousetrap");
+
+// eslint-disable-next-line no-undef
+var peerJS = new Peer(); 
 export default {
   name: "Home",
   data() {
@@ -81,12 +84,12 @@ export default {
     },
     getDiscovered() {
       setTimeout(() => {
-        this.peer_id = this.$peer.id;
+        this.peer_id = peerJS.id ;
         this.$socket.emit("nuevo-totem", {
           nombre: this.nombre,
           estado: this.estado,
           socket_id: this.$socket.id,
-          peer_id: this.$peer.id,
+          peer_id: peerJS.id,
           videos: this.videos,
           callInProgress: this.callInProgress,
           lost_call: false,
@@ -95,7 +98,7 @@ export default {
     },
     ready() {
       let self = this;
-      this.$peer.on("call", (call) => {
+      peerJS.on("call", (call) => {
         navigator.mediaDevices
           .getUserMedia({
             video: {
