@@ -3,6 +3,6 @@ module.exports = {
         "target":"nsis"
     },
     "linux":{
-        "target":["deb","rpm"]
+        "target":["deb"]
     }
 }

@@ -24,4 +24,14 @@ export default {
 </script>
 
 <style>
+.app::-webkit-scrollbar {
+  display: none;
+  
+}
+.app{
+  overflow: hidden;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
 </style>
