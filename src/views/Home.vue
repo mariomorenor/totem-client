@@ -19,7 +19,7 @@ const Store = require("electron-store");
 const storage = new Store();
 const Mousetrap = require("mousetrap");
 const loudness = require("loudness");
-loudness.setVolume(10);
+
 // eslint-disable-next-line no-undef
 var peerJS = new Peer();
 export default {
