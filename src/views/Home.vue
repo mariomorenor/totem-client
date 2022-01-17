@@ -19,7 +19,7 @@ const Store = require("electron-store");
 const storage = new Store();
 const Mousetrap = require("mousetrap");
 const loudness = require("loudness");
-loudness.setVolume(10)
+loudness.setVolume(10);
 // eslint-disable-next-line no-undef
 var peerJS = new Peer();
 export default {
@@ -70,6 +70,13 @@ export default {
         "enter",
         () => {
           if (!this.callInProgress) {
+            this.$buefy.toast.open({
+              type: "is-info",
+              message: "Llamando al operador...",
+              duration: 2000,
+              queue:true,
+              position:"is-bottom"
+            });
             this.$socket.emit("callServer", {
               nombre: this.nombre,
               socket_id: this.$socket.id,
