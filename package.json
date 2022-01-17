@@ -11,7 +11,10 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
-  "author": {"name": "Jonathan Moreno","email": "jmoreno@gruposcanner.com"},
+  "author": {
+    "name": "Jonathan Moreno",
+    "email": "jmoreno@gruposcanner.com"
+  },
   "description": "Totem Cliente",
   "main": "background.js",
   "dependencies": {
@@ -22,6 +25,7 @@
     "buefy": "^0.9.14",
     "core-js": "^3.6.5",
     "electron-store": "^8.0.1",
+    "loudness": "^0.4.1",
     "mousetrap": "^1.6.5",
     "peerjs": "^1.3.2",
     "vue": "^2.6.11",
