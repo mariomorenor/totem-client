@@ -18,9 +18,10 @@ const path = require("path");
 const Store = require("electron-store");
 const storage = new Store();
 const Mousetrap = require("mousetrap");
-
+const loudness = require("loudness");
+loudness.setVolume(10)
 // eslint-disable-next-line no-undef
-var peerJS = new Peer(); 
+var peerJS = new Peer();
 export default {
   name: "Home",
   data() {
@@ -33,6 +34,7 @@ export default {
       peer_id: "",
       callInProgress: false,
       call: "",
+      volume: 0,
     };
   },
   sockets: {
@@ -43,11 +45,14 @@ export default {
     reconnect() {
       this.getDiscovered();
     },
-    reloadTotem(){
+    reloadTotem() {
       window.location.reload();
-    }
+    },
   },
   beforeMount() {
+    loudness.getVolume().then((vol) => {
+      this.volume = vol;
+    });
     this.init();
   },
   mounted() {
@@ -65,7 +70,6 @@ export default {
         "enter",
         () => {
           if (!this.callInProgress) {
-            
             this.$socket.emit("callServer", {
               nombre: this.nombre,
               socket_id: this.$socket.id,
@@ -84,7 +88,7 @@ export default {
     },
     getDiscovered() {
       setTimeout(() => {
-        this.peer_id = peerJS.id ;
+        this.peer_id = peerJS.id;
         this.$socket.emit("nuevo-totem", {
           nombre: this.nombre,
           estado: this.estado,
@@ -93,6 +97,7 @@ export default {
           videos: this.videos,
           callInProgress: this.callInProgress,
           lost_call: false,
+          volume: this.volume,
         });
       }, 1000);
     },
