@@ -4,6 +4,10 @@ import router from "./router";
 import store from "./store";
 
 import VueSocketIO from "vue-socket.io";
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
+
+Vue.use(Buefy)
 
 // import VuePeerJS from 'vue-peerjs';
 // import Peer from 'peerjs';
