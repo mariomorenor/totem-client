@@ -8,6 +8,7 @@
       :src="'file://' + videos[0]"
     ></video>
     <video v-show="callInProgress" id="streaming"></video>
+    <div class='test'></div>
   </div>
 </template>
 
@@ -75,7 +76,7 @@ export default {
               message: "Llamando al operador...",
               duration: 2000,
               queue:true,
-              position:"is-bottom"
+              container: '.test'
             });
             this.$socket.emit("callServer", {
               nombre: this.nombre,
@@ -155,5 +156,14 @@ body {
   position: fixed;
   object-fit: fill;
   z-index: 1000;
+}
+
+.test {
+  position:fixed;
+  width: 40vw;
+  height: 15vh;
+  transform: rotate(90deg);
+  transform-origin: bottom left;
+  // margin-top: 10;
 }
 </style>
