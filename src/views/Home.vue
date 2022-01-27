@@ -23,6 +23,8 @@ const Mousetrap = require("mousetrap");
 const loudness = require("loudness");
 // eslint-disable-next-line no-undef
 var peerJS = new Peer();
+
+var ip = require('ip');
 export default {
   name: "Home",
   data() {
@@ -109,6 +111,7 @@ export default {
           callInProgress: this.callInProgress,
           lost_call: false,
           volume: this.volume,
+          ip:ip.address()
         });
       }, 1000);
     },
