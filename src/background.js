@@ -128,3 +128,20 @@ ipcMain.on("reload-main-window", () => {
   
   mainWindow.webContents.reload();
 });
+
+let tClose = null
+ipcMain.on("facial", ()=>{
+  const mainTest = new BrowserWindow({ width: 800, height: 600, webPreferences:{
+    webSecurity: false
+  }})
+  mainTest.loadURL('https://gsmatrix.gruposcanner.com/web#action=hr_attendance_kiosk_mode&cids=1&menu_id=379')
+  mainTest.webContents.executeJavaScript(`
+  document.getElementsByClassName('o_hr_attendance_sign_in_out_icon')[0].addEventListener('keypress',()=>{
+    alert('alert')
+  })`)
+  // tClose = setTimeout(()=>{
+  //   mainTest.close()
+  // }, 60000)
+
+})
+

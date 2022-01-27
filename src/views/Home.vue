@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron';
 const { app } = require("@electron/remote");
 const fs = require("fs");
 const path = require("path");
@@ -20,7 +21,6 @@ const Store = require("electron-store");
 const storage = new Store();
 const Mousetrap = require("mousetrap");
 const loudness = require("loudness");
-
 // eslint-disable-next-line no-undef
 var peerJS = new Peer();
 export default {
@@ -86,6 +86,9 @@ export default {
         },
         "keyup"
       );
+    Mousetrap.bind("0",()=>{
+      ipcRenderer.send("facial")
+    })
     },
     getVideos() {
       let videosPath = app.getPath("videos");
