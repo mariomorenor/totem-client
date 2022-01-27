@@ -25,6 +25,7 @@
     "buefy": "^0.9.14",
     "core-js": "^3.6.5",
     "electron-store": "^8.0.1",
+    "ip": "^1.1.5",
     "loudness": "^0.4.1",
     "mousetrap": "^1.6.5",
     "peerjs": "^1.3.2",
